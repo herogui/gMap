@@ -4,7 +4,13 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
+    <Button
+        android:text="clear"
+        android:id="@+id/btnClear"
+        android:layout_width="100dp"
+        android:layout_height="50dp" />
     <org.osmdroid.views.MapView android:id="@+id/map"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent">
+    </org.osmdroid.views.MapView>
 </LinearLayout>

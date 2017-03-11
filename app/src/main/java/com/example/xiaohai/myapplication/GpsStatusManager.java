@@ -57,7 +57,8 @@ public class GpsStatusManager{
                     //第一次定位时间UTC gps可用
                     //Log.v(TAG,"GPS is usable");
                     int i=gpsStatus.getTimeToFirstFix();
-                    Toast.makeText(GpsStatusManager.context, "GPS 第一次可用  ！" + i, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(GpsStatusManager.context, "GPS first run  ！" + i, Toast.LENGTH_LONG).show();
+                    GetResEvent.setString("GPS first run  ！");
                     break;
                 }
 
@@ -74,17 +75,20 @@ public class GpsStatusManager{
                         float ft=  gps.getElevation();
                     }
                     //Toast.makeText(GpsStatusManager.context, "卫星数:"+ numOfSatellites, Toast.LENGTH_LONG).show();
-                    Log.d("gpsstate", "卫星数" + numOfSatellites);
+                    Log.d("gpsstate", "Satellites num" + numOfSatellites);
+                    GetResEvent.setString("Satellites num is " + numOfSatellites);
                     break;
                 }
                 case GpsStatus.GPS_EVENT_STARTED:{
                     //Toast.makeText(GpsStatusManager.context, "GPS开启！", Toast.LENGTH_LONG).show();
-                    Log.d("gpsstate", "GPS开启");
+                    Log.d("gpsstate", "GPS run");
+                    GetResEvent.setString("gps run");
                     break;
                 }
                 case GpsStatus.GPS_EVENT_STOPPED:{
                     //Toast.makeText(GpsStatusManager.context, "GPS停止！", Toast.LENGTH_LONG).show();
-                    Log.d("gpsstate", "GPS停止");
+                    Log.d("gpsstate", "GPS stop");
+                    GetResEvent.setString("gps stop");
                     break;
                 }
                 default :

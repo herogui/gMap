@@ -14,9 +14,12 @@ import android.location.LocationManager;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.xiaohai.myapplication.MyEvent.CusEvent;
@@ -34,12 +37,18 @@ import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.PathOverlay;
+import org.osmdroid.views.overlay.Polyline;
+import org.osmdroid.views.overlay.ScaleBarOverlay;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 //private DefaultResourceProxyImpl resourceProxy;
 public class MainActivity extends Activity {
@@ -61,19 +70,62 @@ public class MainActivity extends Activity {
 
         map = (MapView) findViewById(R.id.map);
 
-       // JZLocationConverter.LatLng  latLng =  JZLocationConverter.gcj02Encrypt(31.15657, 121.48853);
+       //JZLocationConverter.LatLng  latLng =  JZLocationConverter.gcj02Encrypt(31.15657, 121.48853);
 
-        //GeoPoint  center = new GeoPoint(latLng.getLatitude(),latLng.getLongitude());
-        //initMap(center);
+        GeoPoint  center = new GeoPoint(31.15681,121.48948);
+       // GeoPoint gp1 = new GeoPoint(40.067225, 116.369758);
+        initMap(center);
+
+        addLine();
+
+        initBtn();
+        return;
+
+
         //定位
-        gpsStatus = GpsStatusManager.instance(MainActivity.this);
+//        gpsStatus = GpsStatusManager.instance(MainActivity.this);
+//
+//        if(openGPSSettings()) {
+//            gps = GPSManager.instance(MainActivity.this);
+//            NetLbs = NetworkLbsManager.instance(MainActivity.this);
+//            NetLbs.GetResEventInit.addCusListener(cusEventInit);
+//            NetLbs.startGpsLocate();
+//        }
+    }
 
-        if(openGPSSettings()) {
-            gps = GPSManager.instance(MainActivity.this);
-            NetLbs = NetworkLbsManager.instance(MainActivity.this);
-            NetLbs.GetResEventInit.addCusListener(cusEventInit);
-            NetLbs.startGpsLocate();
-        }
+    void initBtn()
+    {
+        Button btn = (Button)this.findViewById(R.id.btnClear);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                map.getOverlayManager().clear();
+                map.getController().zoomIn();
+                map.getController().zoomOut();
+            }
+        });
+    }
+
+    void addLine()
+    {
+        GeoPoint gp1 = new GeoPoint(31.15681,121.48948);
+        GeoPoint gp2 = new GeoPoint(31.15572,121.48945);
+        GeoPoint gp3 = new GeoPoint(31.15463,121.48944);
+        GeoPoint gp4 = new GeoPoint(31.15354,121.48941);
+        GeoPoint gp5 = new GeoPoint(31.15235,121.48940);
+
+        List<GeoPoint>  list = new ArrayList<GeoPoint>();
+        list.add(gp1);
+        list.add(gp2);
+        list.add(gp3);
+        list.add(gp4);
+        list.add(gp5);
+
+        Polyline line = new Polyline();
+        line.setColor(Color.BLUE);
+        line.setWidth(11);
+        line.setPoints(list);
+        map.getOverlays().add(line);
     }
 
     void initMap(GeoPoint center)
@@ -98,7 +150,9 @@ public class MainActivity extends Activity {
         final ArrayList<OverlayItem> items = new ArrayList<>();
         items.add(new OverlayItem("Hannover", "SampleDescription",center));
 
-        AddOverLay(items);
+        //AddOverLay(items);
+
+        //addLine();
     }
 
     CusEventListener cusEventInit =   new CusEventListener() {
@@ -124,10 +178,21 @@ public class MainActivity extends Activity {
 
             //获取初始化的位置后要停止监听
             NetLbs.GetResEvent.removeListener(cusEventInit);
-
-            NetLbs.GetResEvent.addCusListener(cusEvent);
             gps.GetResEvent.addCusListener(cusEvent);
+
+            gps.startGpsLocate();
+
+            gpsStatus.GetResEvent.addCusListener(cusEventStatus);
             gpsStatus.start();
+        }
+    };
+
+    CusEventListener cusEventStatus =   new CusEventListener() {
+        @Override
+        public void fireCusEvent(CusEvent e) {
+            EventSourceObject eObject = (EventSourceObject) e.getSource();
+            String res = eObject.getString();
+            Toast.makeText(MainActivity.this,res, Toast.LENGTH_SHORT).show();
         }
     };
 

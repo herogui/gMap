@@ -73,15 +73,15 @@ public class GPSManager implements LocationListener {
         switch (status) {
             //GPS状态为可见时
             case LocationProvider.AVAILABLE:
-                Log.d("gpsstate", "当前GPS状态为可见状态");
+                Log.d("gpsstate", "gps is ok");
                 break;
             //GPS状态为服务区外时
             case LocationProvider.OUT_OF_SERVICE:
-                Log.d("gpsstate", "当前GPS状态为服务区外状态");
+                Log.d("gpsstate", "gps is out service");
                 break;
             //GPS状态为暂停服务时
             case LocationProvider.TEMPORARILY_UNAVAILABLE:
-                Log.d("gpsstate", "当前GPS状态为暂停服务状态");
+                Log.d("gpsstate", "gps is stop");
                 break;
         }
     }
